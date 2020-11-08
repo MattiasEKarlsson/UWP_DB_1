@@ -51,36 +51,49 @@ namespace SharedLibrary.Services
 
         public static void AddTextToCsv(string filepath, string content)
         {
-            var lines = new List<string>() { content };
-            File.AppendAllLines(filepath, lines);
+            try
+            {
+                var lines = new List<string>() { content };
+                File.AppendAllLines(filepath, lines);
+            }
+            catch { }
         }
 
         public static void AddTextToTxt(string filepath, string content)
         {
-            var lines = new List<string>() { content };
-            File.AppendAllLines(filepath, lines);
+            try
+            {
+                var lines = new List<string>() { content };
+                File.AppendAllLines(filepath, lines);
+            }
+            catch { }
+            
         }
 
         public static void WriteToFileXMLTest(string filepath, string firstname, string lastname, string age, string city)
         {
-            XmlWriterSettings settings = new XmlWriterSettings()
+            try
             {
-                Indent = true,
-                IndentChars = ("  "),
-                CloseOutput = true
-            };
+                XmlWriterSettings settings = new XmlWriterSettings()
+                {
+                    Indent = true,
+                    IndentChars = ("  "),
+                    CloseOutput = true
+                };
 
-            using XmlWriter xml = XmlWriter.Create(filepath, settings);
+                using XmlWriter xml = XmlWriter.Create(filepath, settings);
 
-            xml.WriteStartElement("persons");
-            xml.WriteStartElement("person");
-            xml.WriteAttributeString("fullinfo", $"{firstname} {lastname} {age} {city}");
-            xml.WriteEndElement();
-            xml.WriteEndElement();
+                xml.WriteStartElement("persons");
+                xml.WriteStartElement("person");
+                xml.WriteAttributeString("fullinfo", $"{firstname} {lastname} {age} {city}");
+                xml.WriteEndElement();
+                xml.WriteEndElement();
 
-            xml.Flush();
+                xml.Flush();
+            }
+            catch { }
+           
         }
-
         
     }
 }

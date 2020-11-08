@@ -33,33 +33,37 @@ namespace UWPReadWrite
         private ObservableCollection<string> CsvRows = new ObservableCollection<string>();
         private async void ReadCsv_Click(object sender, RoutedEventArgs e)
         {
-
-            var picker = new FileOpenPicker();
-            picker.ViewMode = PickerViewMode.List;
-            picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-            picker.FileTypeFilter.Add(".csv");
-
-            StorageFile file = await picker.PickSingleFileAsync();
-
-            CsvRows.Clear();
-
-            using (CsvParse.CsvFileReader csvReader = new CsvParse.CsvFileReader(await file.OpenStreamForReadAsync()))
+            try
             {
-                CsvParse.CsvRow row = new CsvParse.CsvRow();
-                while (csvReader.ReadRow(row))
+                var picker = new FileOpenPicker();
+                picker.ViewMode = PickerViewMode.List;
+                picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+                picker.FileTypeFilter.Add(".csv");
+
+                StorageFile file = await picker.PickSingleFileAsync();
+
+                CsvRows.Clear();
+
+                using (CsvParse.CsvFileReader csvReader = new CsvParse.CsvFileReader(await file.OpenStreamForReadAsync()))
                 {
-                    string newRow = null;
-
-                    for (int i = 0; i < row.Count; i++)
+                    CsvParse.CsvRow row = new CsvParse.CsvRow();
+                    while (csvReader.ReadRow(row))
                     {
-                        newRow += row[i] + "";
-                    }
-                    string print = newRow.Replace(";", " ");
-                    CsvRows.Add(print);
-                }
+                        string newRow = null;
 
-                LVCSV.ItemsSource = CsvRows;
+                        for (int i = 0; i < row.Count; i++)
+                        {
+                            newRow += row[i] + "";
+                        }
+                        string print = newRow.Replace(";", " ");
+                        CsvRows.Add(print);
+                    }
+
+                    LVCSV.ItemsSource = CsvRows;
+                }
             }
+            catch { }
+            
         }
 
         private async void ReadJson_Click(object sender, RoutedEventArgs e)
@@ -122,22 +126,27 @@ namespace UWPReadWrite
 
         private async void Readtxt_Click(object sender, RoutedEventArgs e)
         {
-            FileOpenPicker txt = new FileOpenPicker();
-            txt.ViewMode = PickerViewMode.Thumbnail;
-            txt.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-            txt.FileTypeFilter.Add(".txt");
-
-            StorageFile file = await txt.PickSingleFileAsync();
-
-            if (file != null)
+            try
             {
-                var stream = await file.OpenAsync(FileAccessMode.Read);
-                using (StreamReader reader = new StreamReader(stream.AsStream()))
-                {
-                    TBTxt.Text = reader.ReadToEnd();
-                }
+                FileOpenPicker txt = new FileOpenPicker();
+                txt.ViewMode = PickerViewMode.Thumbnail;
+                txt.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+                txt.FileTypeFilter.Add(".txt");
 
+                StorageFile file = await txt.PickSingleFileAsync();
+
+                if (file != null)
+                {
+                    var stream = await file.OpenAsync(FileAccessMode.Read);
+                    using (StreamReader reader = new StreamReader(stream.AsStream()))
+                    {
+                        TBTxt.Text = reader.ReadToEnd();
+                    }
+
+                }
             }
+            catch { }
+            
         }
 
         private void Addtxt_Click(object sender, RoutedEventArgs e)
@@ -217,16 +226,7 @@ namespace UWPReadWrite
             return package;
         }
 
-        private async Task <StorageFile>PickaFileToRead()                           //Används ej
-        {
-            var picker = new FileOpenPicker();
-            picker.ViewMode = PickerViewMode.List;
-            picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-            picker.FileTypeFilter.Add(".csv");
-            StorageFile file = await picker.PickSingleFileAsync();
-            return file;
-        }
-
+        
        
 
 
